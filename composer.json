@@ -19,7 +19,7 @@
         "php": "^8.1",
         "laravel/framework": "^10.0",
         "eveseat/web": "^5.0",
-        "evseat/services": "^5.0",
+        "eveseat/services": "^5.0",
         "eveseat/notifications": "^5.0"
     },
     "require-dev": {

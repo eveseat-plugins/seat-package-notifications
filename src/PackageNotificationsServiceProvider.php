@@ -42,6 +42,10 @@ class PackageNotificationsServiceProvider extends AbstractSeatPlugin
     public function register()
     {
         $this->registerDatabaseSeeders(ScheduleSeeder::class);
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/Config/notifications.alerts.php', 'notifications.alerts'
+        );
     }
 
     /**

@@ -4,24 +4,40 @@ namespace RecursiveTree\Seat\PackageNotifications\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use RecursiveTree\Seat\PackageNotifications\Model\OutdatedPackage;
+use RecursiveTree\Seat\PackageNotifications\Notifications\DiscordOutdatedPackageNotification;
+use Seat\Notifications\Models\NotificationGroup;
+use Seat\Notifications\Traits\NotificationDispatchTool;
 use Seat\Services\AbstractSeatPlugin;
 use Seat\Services\Traits\VersionsManagementTrait;
 
 class CheckVersions implements ShouldQueue
 {
-    use Dispatchable, VersionsManagementTrait;
+    use Dispatchable, VersionsManagementTrait, NotificationDispatchTool;
     public function handle(): void
     {
+        $outdatedPackages = collect();
+
         $plugins = $this->getPluginsMetadataList();
         foreach ($plugins->core as $package){
-            $this->checkPackage($package);
+            $this->checkPackage($package, $outdatedPackages);
         }
         foreach ($plugins->plugins as $package){
-            $this->checkPackage($package);
+            $this->checkPackage($package, $outdatedPackages);
+        }
+
+        if($outdatedPackages->isNotEmpty()){
+            $groups = NotificationGroup::with('alerts')
+                ->whereHas('alerts', function ($query) {
+                    $query->where('alert', 'outdated_packages');
+                })->get();
+            $this->dispatchNotifications('outdated_packages', $groups, function ($notificationClass) use ($outdatedPackages) {
+                return new $notificationClass($outdatedPackages);
+            });
         }
     }
 
-    private function checkPackage($package): void
+    private function checkPackage($package, $outdatedPackages): void
     {
         $serviceProvider = app()->getProvider($package);
         if(!$serviceProvider instanceof AbstractSeatPlugin) {
@@ -34,11 +50,8 @@ class CheckVersions implements ShouldQueue
 
         $latest_version = $this->getPackageLatestVersion($serviceProvider->getPackagistVendorName(), $serviceProvider->getPackagistPackageName());
         if($installed_version !== $latest_version){
-            $this->dispatchNotification($serviceProvider);
+            $packageInfo = new OutdatedPackage(sprintf("%s/%s",$serviceProvider->getPackagistVendorName(), $serviceProvider->getPackagistPackageName()),$installed_version, $latest_version);
+            $outdatedPackages->push($packageInfo);
         }
-    }
-
-    private function dispatchNotification(AbstractSeatPlugin $package): void {
-        //dd($package->getPackagistPackageName());
     }
 }

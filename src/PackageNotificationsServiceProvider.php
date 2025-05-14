@@ -21,6 +21,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 namespace RecursiveTree\Seat\PackageNotifications;
 
+use RecursiveTree\Seat\PackageNotifications\Commands\CheckVersions;
+use RecursiveTree\Seat\PackageNotifications\Database\Seeders\ScheduleSeeder;
 use Seat\Services\AbstractSeatPlugin;
 
 /**
@@ -31,11 +33,15 @@ class PackageNotificationsServiceProvider extends AbstractSeatPlugin
     public function boot()
     {
         $this->loadTranslationsFrom(__DIR__ . '/resources/lang', 'package-notifications');
+
+        $this->commands([
+            CheckVersions::class
+        ]);
     }
 
     public function register()
     {
-
+        $this->registerDatabaseSeeders(ScheduleSeeder::class);
     }
 
     /**

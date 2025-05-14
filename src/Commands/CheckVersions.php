@@ -10,7 +10,7 @@ class CheckVersions extends Command
      *
      * @var string
      */
-    protected $signature = 'package-notifications:check';
+    protected $signature = 'package-notifications:check {--sync}';
 
     /**
      * The console command description.
@@ -23,6 +23,12 @@ class CheckVersions extends Command
      * Execute the console command.
      */
     public function handle(){
+        if($this->option('sync')) {
+            \RecursiveTree\Seat\PackageNotifications\Jobs\CheckVersions::dispatchSync();
+        } else {
+            \RecursiveTree\Seat\PackageNotifications\Jobs\CheckVersions::dispatch();
+        }
+
         return $this::SUCCESS;
     }
 }

@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 use RecursiveTree\Seat\PackageNotifications\Model\OutdatedPackage;
 use Seat\Notifications\Notifications\AbstractSlackNotification;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Seat\Notifications\Services\Discord\Messages\DiscordEmbedField;
 use Seat\Notifications\Services\Discord\Messages\DiscordMessage;
 
 class SlackOutdatedPackageNotification extends AbstractSlackNotification

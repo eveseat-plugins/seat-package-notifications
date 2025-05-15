@@ -5,7 +5,8 @@ return [
         'label' => 'package-notifications::notifications.outdated_packages',
         'handlers' => [
             'discord' => \RecursiveTree\Seat\PackageNotifications\Notifications\DiscordOutdatedPackageNotification::class,
-            'slack' => \RecursiveTree\Seat\PackageNotifications\Notifications\SlackOutdatedPackageNotification::class
+            'slack' => \RecursiveTree\Seat\PackageNotifications\Notifications\SlackOutdatedPackageNotification::class,
+            'mail' => \RecursiveTree\Seat\PackageNotifications\Notifications\MailOutdatedPackageNotification::class
         ],
     ]
 ];

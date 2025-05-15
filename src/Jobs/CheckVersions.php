@@ -46,7 +46,7 @@ class CheckVersions implements ShouldQueue
         }
 
         $installed_version = $serviceProvider->getVersion();
-        // if($installed_version === "missing") return; // the plugin was installed via dev override
+        if($installed_version === "missing") return; // the plugin was installed via dev override
 
         $latest_version = $this->getPackageLatestVersion($serviceProvider->getPackagistVendorName(), $serviceProvider->getPackagistPackageName());
         if($installed_version !== $latest_version){

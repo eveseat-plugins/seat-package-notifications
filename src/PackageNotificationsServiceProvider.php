@@ -57,7 +57,7 @@ class PackageNotificationsServiceProvider extends AbstractSeatPlugin
      */
     public function getName(): string
     {
-        return 'Your Package Friendly Name';
+        return 'SeAT Package Notifications';
     }
 
     /**

@@ -10,7 +10,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "RecursiveTree\\Seat\\PackageNotifications\\": "src/"
+            "RecursiveTree\\Seat\\PackageNotifications\\": "src/",
+            "RecursiveTree\\Seat\\PackageNotifications\\Database\\Seeders\\": "src/database/seeders/"
         }
     },
     "minimum-stability": "dev",
